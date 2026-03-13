@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Ensures HTTPS (e.g. belamarble.com) uses system certificates and
+  allows cleartext for local API (e.g. http://192.168.x.x:62808).
+  Helps avoid "Failed host lookup" and SSL issues on emulator/device.
+-->
+<network-security-config>
+    <!-- Trust system CAs for HTTPS (belamarble.com, etc.) -->
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system" />
+            <certificates src="user" />
+        </trust-anchors>
+    </base-config>
+</network-security-config>

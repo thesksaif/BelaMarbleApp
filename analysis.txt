@@ -1,0 +1,69 @@
+Analyzing bellamarble...                                        
+
+warning • Unused import: 'package:flutter/material.dart' • lib/core/app_images.dart:1:8 • unused_import
+   info • The constant name 'Home' isn't a lowerCamelCase identifier • lib/core/app_images.dart:6:16 • constant_identifier_names
+   info • The constant name 'Favorites' isn't a lowerCamelCase identifier • lib/core/app_images.dart:7:16 • constant_identifier_names
+   info • The constant name 'Contact' isn't a lowerCamelCase identifier • lib/core/app_images.dart:8:16 • constant_identifier_names
+   info • The constant name 'Double' isn't a lowerCamelCase identifier • lib/core/app_images.dart:13:16 • constant_identifier_names
+   info • The constant name 'ic_home' isn't a lowerCamelCase identifier • lib/core/app_images.dart:14:16 • constant_identifier_names
+   info • The constant name 'Posters_Special_Highlighters' isn't a lowerCamelCase identifier • lib/core/app_images.dart:15:16 • constant_identifier_names
+   info • The constant name 'Wall_Tiles' isn't a lowerCamelCase identifier • lib/core/app_images.dart:16:16 • constant_identifier_names
+   info • The constant name 'Distamat' isn't a lowerCamelCase identifier • lib/core/app_images.dart:17:16 • constant_identifier_names
+   info • The constant name 'High_Glossy' isn't a lowerCamelCase identifier • lib/core/app_images.dart:18:16 • constant_identifier_names
+   info • The constant name 'Sugar_Finish' isn't a lowerCamelCase identifier • lib/core/app_images.dart:19:16 • constant_identifier_names
+   info • The constant name 'Border_Sanitary' isn't a lowerCamelCase identifier • lib/core/app_images.dart:20:16 • constant_identifier_names
+  error • Expected a class member • lib/core/models/web_setting_model.dart:14:5 • expected_class_member
+  error • All final variables must be initialized, but 'address', 'email', and 2 others aren't • lib/core/models/web_setting_model.dart:14:12 • final_not_initialized_constructor
+  error • The unnamed constructor is already defined • lib/core/models/web_setting_model.dart:14:12 • duplicate_constructor
+   info • Missing type annotation • lib/core/models/web_setting_model.dart:15:7 • strict_top_level_inference
+  error • Named parameters must be enclosed in curly braces ('{' and '}') • lib/core/models/web_setting_model.dart:15:12 • named_parameter_outside_group
+  error • Using a colon as the separator before a default value is no longer supported • lib/core/models/web_setting_model.dart:15:12 • obsolete_colon_for_default_value
+  error • Undefined name 'json' • lib/core/models/web_setting_model.dart:15:14 • undefined_identifier
+   info • Missing type annotation • lib/core/models/web_setting_model.dart:16:7 • strict_top_level_inference
+  error • Named parameters must be enclosed in curly braces ('{' and '}') • lib/core/models/web_setting_model.dart:16:12 • named_parameter_outside_group
+  error • Using a colon as the separator before a default value is no longer supported • lib/core/models/web_setting_model.dart:16:12 • obsolete_colon_for_default_value
+  error • Undefined name 'json' • lib/core/models/web_setting_model.dart:16:14 • undefined_identifier
+   info • Missing type annotation • lib/core/models/web_setting_model.dart:17:7 • strict_top_level_inference
+  error • Named parameters must be enclosed in curly braces ('{' and '}') • lib/core/models/web_setting_model.dart:17:14 • named_parameter_outside_group
+  error • Using a colon as the separator before a default value is no longer supported • lib/core/models/web_setting_model.dart:17:14 • obsolete_colon_for_default_value
+  error • Undefined name 'json' • lib/core/models/web_setting_model.dart:17:16 • undefined_identifier
+   info • Missing type annotation • lib/core/models/web_setting_model.dart:18:7 • strict_top_level_inference
+  error • Named parameters must be enclosed in curly braces ('{' and '}') • lib/core/models/web_setting_model.dart:18:14 • named_parameter_outside_group
+  error • Using a colon as the separator before a default value is no longer supported • lib/core/models/web_setting_model.dart:18:14 • obsolete_colon_for_default_value
+  error • Undefined name 'json' • lib/core/models/web_setting_model.dart:18:16 • undefined_identifier
+  error • Expected a method, getter, setter or operator declaration • lib/core/models/web_setting_model.dart:21:1 • expected_executable
+  error • The method 'fromJson' isn't defined for the type 'WebSettingModel' • lib/core/models/web_setting_model.dart:38:52 • undefined_method
+   info • Unnecessary use of multiple underscores • lib/core/widgets/shimmer_loading.dart:38:24 • unnecessary_underscores
+   info • Unnecessary use of multiple underscores • lib/core/widgets/shimmer_loading.dart:60:24 • unnecessary_underscores
+   info • The import of 'package:flutter/cupertino.dart' is unnecessary because all of the used elements are also provided by the import of 'package:flutter/material.dart' • lib/my_app.dart:1:8 • unnecessary_import
+   info • The file name 'details_Screen.dart' isn't a lower_case_with_underscores identifier • lib/screen/categories/details_Screen.dart:1:1 • file_names
+warning • Unused import: 'package:google_fonts/google_fonts.dart' • lib/screen/categories/details_Screen.dart:8:8 • unused_import
+   info • Unnecessary use of multiple underscores • lib/screen/categories/details_Screen.dart:90:58 • unnecessary_underscores
+   info • Unnecessary use of multiple underscores • lib/screen/categories/details_Screen.dart:90:61 • unnecessary_underscores
+warning • The operand can't be 'null', so the condition is always 'true' • lib/screen/categories/details_Screen.dart:196:43 • unnecessary_null_comparison
+   info • 'Share' is deprecated and shouldn't be used. Use SharePlus instead • lib/screen/categories/details_Screen.dart:198:33 • deprecated_member_use
+   info • 'share' is deprecated and shouldn't be used. Use SharePlus.instance.share() instead • lib/screen/categories/details_Screen.dart:198:39 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/screen/categories/details_Screen.dart:253:43 • deprecated_member_use
+   info • Unnecessary use of multiple underscores • lib/screen/categories/details_Screen.dart:266:48 • unnecessary_underscores
+   info • Unnecessary use of multiple underscores • lib/screen/categories/details_Screen.dart:266:51 • unnecessary_underscores
+warning • Unused import: 'package:bellamarble/core/models/product_model.dart' • lib/screen/categories/title_list_screen.dart:1:8 • unused_import
+   info • Don't use 'BuildContext's across async gaps • lib/screen/categories/title_list_screen.dart:30:9 • use_build_context_synchronously
+   info • Unnecessary use of multiple underscores • lib/screen/categories/title_list_screen.dart:105:44 • unnecessary_underscores
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/screen/categories/title_list_screen.dart:156:62 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/screen/contact_Screen/contact_screens.dart:91:31 • deprecated_member_use
+   info • The type name '_sectionTitle' isn't an UpperCamelCase identifier • lib/screen/contact_Screen/contact_screens.dart:102:7 • camel_case_types
+warning • A value for optional parameter 'key' isn't ever given • lib/screen/contact_Screen/contact_screens.dart:138:64 • unused_element_parameter
+   info • 'color' is deprecated and shouldn't be used. Use colorFilter instead • lib/screen/contact_Screen/contact_screens.dart:150:15 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/screen/favorites/favorites_screen.dart:109:48 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/screen/gallery/gallery_images.dart:125:43 • deprecated_member_use
+   info • Unnecessary use of multiple underscores • lib/screen/gallery/gallery_images.dart:136:46 • unnecessary_underscores
+   info • Unnecessary use of multiple underscores • lib/screen/gallery/gallery_images.dart:136:49 • unnecessary_underscores
+   info • Unnecessary use of multiple underscores • lib/screen/gallery/gallery_images.dart:179:46 • unnecessary_underscores
+   info • Unnecessary use of multiple underscores • lib/screen/gallery/gallery_images.dart:179:49 • unnecessary_underscores
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/screen/gallery/gallery_images.dart:189:42 • deprecated_member_use
+   info • 'listenMode' is deprecated and shouldn't be used. Use SpeechListenOptions.listenMode instead • lib/screen/gallery/provider/image_provider.dart:96:11 • deprecated_member_use
+   info • 'partialResults' is deprecated and shouldn't be used. Use SpeechListenOptions.partialResults instead • lib/screen/gallery/provider/image_provider.dart:97:11 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/screen/home/home_screen.dart:211:55 • deprecated_member_use
+warning • Unused import: 'package:bellamarble/core/app_images.dart' • lib/screen/home/provider/home_provider.dart:3:8 • unused_import
+   info • Unnecessary use of 'toList' in a spread • lib/screen/home/search_results_screen.dart:148:18 • unnecessary_to_list_in_spreads
+
