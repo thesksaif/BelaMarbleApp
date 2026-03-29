@@ -52,7 +52,7 @@ class HomeProvider extends ChangeNotifier {
 
         if (data["status"] == true && data["data"] is List) {
           bannerImages = (data["data"] as List)
-              .map<String>((item) => item["image"].toString())
+              .map<String>((item) => _proxyImage(item["image"].toString()))
               .toList();
         }
       }
@@ -82,7 +82,7 @@ class HomeProvider extends ChangeNotifier {
             return {
               "id": item["category_id"]?.toString() ?? "",
               "title": item["category_name"]?.toString() ?? "",
-              "logo": item["logo"]?.toString() ?? "",
+              "logo": _proxyImage(item["logo"]?.toString() ?? ""),
             };
           }).toList();
         }
@@ -170,6 +170,13 @@ class HomeProvider extends ChangeNotifier {
        );
     }
     notifyListeners();
+  }
+
+
+  static String _proxyImage(String url) {
+    if (url.isEmpty) return url;
+    final cleanUrl = url.replaceFirst('https://', '').replaceFirst('http://', '');
+    return "https://images.weserv.nl/?url=$cleanUrl";
   }
 
   @override

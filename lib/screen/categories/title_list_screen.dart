@@ -73,7 +73,8 @@ class _TileListScreenState extends State<TileListScreen> {
                       Expanded(
                         child: TextField(
                           controller: provider.searchController,
-                          onChanged: provider.onSearch,
+                          onChanged: (val) =>
+                              provider.onSearch(val, widget.categoryId),
                           style: GoogleFonts.inter(
                             color: Colors.black87,
                             fontSize: 14,

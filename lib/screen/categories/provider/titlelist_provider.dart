@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:bellamarble/core/models/product_model.dart';
 import 'package:bellamarble/service/api_url.dart';
@@ -21,6 +22,10 @@ class TileListProvider extends ChangeNotifier {
   int _currentPage = 1;
   static const int _pageSize = 20;
 
+  Timer? _debounceTimer;
+  String _currentQuery = '';
+  String _currentCategoryId = '';
+
   TileListProvider() {
     _speech = stt.SpeechToText();
   }
@@ -28,6 +33,7 @@ class TileListProvider extends ChangeNotifier {
   /// Initial load — called once on screen init
   Future<void> fetchProducts(String categoryId) async {
     if (isLoading) return;
+    _currentCategoryId = categoryId;
     _currentPage = 1;
     _allProducts = [];
     filteredProducts = [];
@@ -57,9 +63,12 @@ class TileListProvider extends ChangeNotifier {
 
   Future<void> _fetchPage(String categoryId, int page) async {
     try {
+      final query = searchController.text.trim();
       final uri = Uri.parse(
-          '${ApiUrls.productList}?category_id=$categoryId&page=$page&limit=$_pageSize');
-      debugPrint('CATEGORY LIST [page=$page] → $uri');
+          '${ApiUrls.productList}?category_id=$categoryId&page=$page&limit=$_pageSize'
+          '${query.isNotEmpty ? '&search=${Uri.encodeComponent(query)}' : ''}');
+      
+      debugPrint('CATEGORY LIST [page=$page, query=$query] → $uri');
 
       final response = await http.get(uri);
 
@@ -105,8 +114,14 @@ class TileListProvider extends ChangeNotifier {
     }
   }
 
-  void onSearch(String value) {
-    _applySearch(value);
+  void onSearch(String value, String categoryId) {
+    _debounceTimer?.cancel();
+    _debounceTimer = Timer(const Duration(milliseconds: 500), () {
+      if (_currentQuery != value.trim()) {
+        _currentQuery = value.trim();
+        fetchProducts(categoryId);
+      }
+    });
     notifyListeners();
   }
 
@@ -126,7 +141,7 @@ class TileListProvider extends ChangeNotifier {
             TextPosition(offset: text.length),
           );
 
-          onSearch(text);
+          onSearch(text, _currentCategoryId);
         },
       );
     }
@@ -137,5 +152,12 @@ class TileListProvider extends ChangeNotifier {
     _speech.stop();
     isListening = false;
     notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    _debounceTimer?.cancel();
+    searchController.dispose();
+    super.dispose();
   }
 }

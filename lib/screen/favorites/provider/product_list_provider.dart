@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:bellamarble/core/models/product_model.dart';
 import 'package:bellamarble/service/api_url.dart';
@@ -20,6 +21,9 @@ class ProductListProvider extends ChangeNotifier {
 
   int _currentPage = 1;
   static const int _pageSize = 20;
+
+  Timer? _debounceTimer;
+  String _currentQuery = '';
 
   ProductListProvider() {
     _speech = stt.SpeechToText();
@@ -57,9 +61,12 @@ class ProductListProvider extends ChangeNotifier {
 
   Future<void> _fetchPage(int page) async {
     try {
+      final query = searchController.text.trim();
       final uri = Uri.parse(
-          '${ApiUrls.productList}?page=$page&limit=$_pageSize');
-      debugPrint('PRODUCT LIST [page=$page] → $uri');
+          '${ApiUrls.productList}?page=$page&limit=$_pageSize'
+          '${query.isNotEmpty ? '&search=${Uri.encodeComponent(query)}' : ''}');
+      
+      debugPrint('GLOBAL PRODUCT LIST [page=$page, query=$query] → $uri');
 
       final response = await http.get(uri);
 
@@ -104,7 +111,13 @@ class ProductListProvider extends ChangeNotifier {
   }
 
   void onSearch(String value) {
-    _applySearch(value);
+    _debounceTimer?.cancel();
+    _debounceTimer = Timer(const Duration(milliseconds: 500), () {
+      if (_currentQuery != value.trim()) {
+        _currentQuery = value.trim();
+        fetchInitial();
+      }
+    });
     notifyListeners();
   }
 
@@ -131,6 +144,7 @@ class ProductListProvider extends ChangeNotifier {
 
   @override
   void dispose() {
+    _debounceTimer?.cancel();
     searchController.dispose();
     super.dispose();
   }

@@ -79,19 +79,27 @@ class Product {
     required this.createdAt,
   });
 
+  static String _proxyImage(String url) {
+    if (url.isEmpty) return url;
+    // For web development to bypass CORS, we use an image proxy.
+    // This is only strictly necessary on web when not using the HTML renderer or when CORS is strict.
+    final cleanUrl = url.replaceFirst('https://', '').replaceFirst('http://', '');
+    return "https://images.weserv.nl/?url=$cleanUrl";
+  }
+
   factory Product.fromJson(Map<String, dynamic> json) {
     return Product(
       productId: json['product_id'] ?? 0,
       categoryId: json['category_id'] ?? 0,
       name: json['name'] ?? '',
-      size: json['size'] ?? '',
+      size: (json['size'] ?? '').toString(),
       description: json['description'] ?? '',
       tags: json['tags'] ?? '',
-      quantity: json['quantity'] ?? '',
-      price: json['price'] ?? '',
+      quantity: (json['quantity'] ?? '').toString(),
+      price: (json['price'] ?? '').toString(),
       availability: json['availability'] ?? '',
       position: json['position'] ?? 0,
-      image: json['image'] ?? '',
+      image: _proxyImage(json['image'] ?? ''),
       createdAt: json['created_at'] ?? '',
     );
   }
