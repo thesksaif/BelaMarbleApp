@@ -1,8 +1,7 @@
-import 'dart:convert';
 import 'package:bellamarble/core/models/product_model.dart';
+import 'package:bellamarble/service/api_client.dart';
 import 'package:bellamarble/service/api_url.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 class GalleryImagesProvider extends ChangeNotifier {
@@ -12,7 +11,7 @@ class GalleryImagesProvider extends ChangeNotifier {
 
   final stt.SpeechToText speech = stt.SpeechToText();
   bool isListening = false;
-  
+
   /// PRODUCT DATA
   List<Product> products = [];
   List<Product> filteredProducts = [];
@@ -21,7 +20,7 @@ class GalleryImagesProvider extends ChangeNotifier {
   GalleryImagesProvider() {
     _init();
   }
-  
+
   Future<void> _init() async {
     await fetchProducts();
   }
@@ -29,23 +28,20 @@ class GalleryImagesProvider extends ChangeNotifier {
   Future<void> fetchProducts() async {
     isLoading = true;
     notifyListeners();
-    
+
     try {
-      final response = await http.get(
-        Uri.parse('${ApiUrls.productList}?page=1&limit=20'),
+      final body = await ApiClient.instance.getJson(
+        '${ApiUrls.productList}?page=1&limit=20',
       );
-      
-      if (response.statusCode == 200) {
-        final productResponse = ProductListResponse.fromJson(jsonDecode(response.body));
-        if (productResponse.status) {
-          products = productResponse.data;
-          filteredProducts = List.from(products);
-        }
+      final productResponse = ProductListResponse.fromJson(body);
+      if (productResponse.status) {
+        products = productResponse.data;
+        filteredProducts = List.from(products);
       }
     } catch (e) {
       debugPrint("GALLERY API ERROR: $e");
     }
-    
+
     isLoading = false;
     notifyListeners();
   }

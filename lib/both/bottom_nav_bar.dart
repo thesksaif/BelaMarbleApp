@@ -24,11 +24,7 @@ class _CustomBottomNavState extends State<CustomBottomNav> {
     ContactScreens(),
   ];
 
-  final List<String> _labels = [
-    "Home",
-    "Product",
-    "Contact",
-  ];
+  final List<String> _labels = ["Home", "Product", "Contact"];
 
   /// ✅ SVG Icons
   final List<String> _svgIcons = [
@@ -37,8 +33,7 @@ class _CustomBottomNavState extends State<CustomBottomNav> {
     AppImages.Contact,
   ];
 
-  int get _safeIndex =>
-      _currentIndex.clamp(0, _pages.length - 1);
+  int get _safeIndex => _currentIndex.clamp(0, _pages.length - 1);
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +45,6 @@ class _CustomBottomNavState extends State<CustomBottomNav> {
 
       body: _pages[index],
 
-
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
         child: SizedBox(
@@ -61,103 +55,103 @@ class _CustomBottomNavState extends State<CustomBottomNav> {
               return Stack(
                 clipBehavior: Clip.none,
                 children: [
-              /// 🔹 Bottom Bar
-              Container(
-                height: 70,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(35),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.06),
-                      blurRadius: 20,
-                      offset: const Offset(0, 10),
+                  /// 🔹 Bottom Bar
+                  Container(
+                    height: 70,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(35),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.06),
+                          blurRadius: 20,
+                          offset: const Offset(0, 10),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-                child: Row(
-                  children: List.generate(_svgIcons.length, (i) {
-                    final bool isSelected = index == i;
-                    return Expanded(
-                      child: GestureDetector(
-                        behavior: HitTestBehavior.opaque,
-                        onTap: () {
-                          setState(() => _currentIndex = i);
-                        },
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            AnimatedOpacity(
-                              duration: const Duration(milliseconds: 200),
-                              opacity: isSelected ? 0.0 : 1.0,
-                              child: SvgPicture.asset(
-                                _svgIcons[i],
-                                height: 24,
-                                colorFilter: const ColorFilter.mode(
-                                  Colors.grey,
-                                  BlendMode.srcIn,
-                                ),
-                              ),
-                            ),
-                            AnimatedOpacity(
-                              duration: const Duration(milliseconds: 200),
-                              opacity: isSelected ? 0.0 : 1.0,
-                              child: Padding(
-                                padding: const EdgeInsets.only(top: 4.0),
-                                child: Text(
-                                  _labels[i],
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.grey,
+                    child: Row(
+                      children: List.generate(_svgIcons.length, (i) {
+                        final bool isSelected = index == i;
+                        return Expanded(
+                          child: GestureDetector(
+                            behavior: HitTestBehavior.opaque,
+                            onTap: () {
+                              setState(() => _currentIndex = i);
+                            },
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                AnimatedOpacity(
+                                  duration: const Duration(milliseconds: 200),
+                                  opacity: isSelected ? 0.0 : 1.0,
+                                  child: SvgPicture.asset(
+                                    _svgIcons[i],
+                                    height: 24,
+                                    colorFilter: const ColorFilter.mode(
+                                      Colors.grey,
+                                      BlendMode.srcIn,
+                                    ),
                                   ),
                                 ),
-                              ),
+                                AnimatedOpacity(
+                                  duration: const Duration(milliseconds: 200),
+                                  opacity: isSelected ? 0.0 : 1.0,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(top: 4.0),
+                                    child: Text(
+                                      _labels[i],
+                                      style: const TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                      ),
-                    );
-                  }),
-                ),
-              ),
-
-              /// 🔹 Floating Selected Circle
-              AnimatedPositioned(
-                duration: const Duration(milliseconds: 300),
-                curve: Curves.easeOutBack,
-                left: (index * itemWidth) + (itemWidth / 2) - 30,
-                top: -20,
-                child: Container(
-                  height: 60,
-                  width: 60,
-                  decoration: BoxDecoration(
-                    color: AppColors.darkblue,
-                    shape: BoxShape.circle,
-                    border: Border.all(color: Colors.white, width: 4),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.darkblue.withOpacity(0.25),
-                        blurRadius: 10,
-                        offset: const Offset(0, 5),
-                      ),
-                    ],
+                          ),
+                        );
+                      }),
+                    ),
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(14.0),
-                    child: SvgPicture.asset(
-                      _svgIcons[index],
-                      colorFilter: const ColorFilter.mode(
-                        Colors.white,
-                        BlendMode.srcIn,
+
+                  /// 🔹 Floating Selected Circle
+                  AnimatedPositioned(
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeOutBack,
+                    left: (index * itemWidth) + (itemWidth / 2) - 30,
+                    top: -20,
+                    child: Container(
+                      height: 60,
+                      width: 60,
+                      decoration: BoxDecoration(
+                        color: AppColors.darkblue,
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.white, width: 4),
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColors.darkblue.withOpacity(0.25),
+                            blurRadius: 10,
+                            offset: const Offset(0, 5),
+                          ),
+                        ],
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(14.0),
+                        child: SvgPicture.asset(
+                          _svgIcons[index],
+                          colorFilter: const ColorFilter.mode(
+                            Colors.white,
+                            BlendMode.srcIn,
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ),
-            ],
-          );
-            }
+                ],
+              );
+            },
           ),
         ),
       ),

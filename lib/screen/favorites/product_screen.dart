@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:bellamarble/core/widgets/app_network_image.dart';
 
 class ProductScreen extends StatefulWidget {
   const ProductScreen({super.key});
@@ -24,8 +25,7 @@ class _ProductScreenState extends State<ProductScreen> {
   void initState() {
     super.initState();
     // Initial data fetch
-    Future.microtask(
-        () => context.read<ProductListProvider>().fetchInitial());
+    Future.microtask(() => context.read<ProductListProvider>().fetchInitial());
 
     // Infinite scroll: load more when near the bottom
     _scrollController.addListener(() {
@@ -73,15 +73,19 @@ class _ProductScreenState extends State<ProductScreen> {
                           controller: provider.searchController,
                           onChanged: provider.onSearch,
                           style: GoogleFonts.inter(
-                              color: Colors.black87, fontSize: 14),
+                            color: Colors.black87,
+                            fontSize: 14,
+                          ),
                           decoration: InputDecoration(
                             hintText: "Search products...",
                             hintStyle: GoogleFonts.inter(
-                                color: Colors.grey.shade500),
+                              color: Colors.grey.shade500,
+                            ),
                             border: InputBorder.none,
                             isDense: true,
-                            contentPadding:
-                                const EdgeInsets.symmetric(vertical: 12),
+                            contentPadding: const EdgeInsets.symmetric(
+                              vertical: 12,
+                            ),
                           ),
                         ),
                       ),
@@ -107,41 +111,43 @@ class _ProductScreenState extends State<ProductScreen> {
                   child: provider.isLoading
                       ? _buildShimmer()
                       : provider.errorMessage.isNotEmpty &&
-                              provider.filteredProducts.isEmpty
-                          ? Center(
-                              child: Text(
-                                provider.errorMessage,
-                                style: GoogleFonts.inter(color: Colors.grey),
-                              ),
-                            )
-                          : provider.filteredProducts.isEmpty
-                              ? Center(
-                                  child: Text("No products found",
-                                      style: GoogleFonts.inter()))
-                              : ListView.builder(
-                                  controller: _scrollController,
-                                  // +1 for the load-more indicator at bottom
-                                  itemCount:
-                                      provider.filteredProducts.length +
-                                          (provider.isLoadingMore ? 1 : 0),
-                                  itemBuilder: (context, index) {
-                                    // Load-more spinner at the very end
-                                    if (index ==
-                                        provider.filteredProducts.length) {
-                                      return const Padding(
-                                        padding: EdgeInsets.all(16),
-                                        child: Center(
-                                          child: CircularProgressIndicator(
-                                              strokeWidth: 2),
-                                        ),
-                                      );
-                                    }
-
-                                    final product =
-                                        provider.filteredProducts[index];
-                                    return _ProductCard(product: product);
-                                  },
+                            provider.filteredProducts.isEmpty
+                      ? Center(
+                          child: Text(
+                            provider.errorMessage,
+                            style: GoogleFonts.inter(color: Colors.grey),
+                          ),
+                        )
+                      : provider.filteredProducts.isEmpty
+                      ? Center(
+                          child: Text(
+                            "No products found",
+                            style: GoogleFonts.inter(),
+                          ),
+                        )
+                      : ListView.builder(
+                          controller: _scrollController,
+                          // +1 for the load-more indicator at bottom
+                          itemCount:
+                              provider.filteredProducts.length +
+                              (provider.isLoadingMore ? 1 : 0),
+                          itemBuilder: (context, index) {
+                            // Load-more spinner at the very end
+                            if (index == provider.filteredProducts.length) {
+                              return const Padding(
+                                padding: EdgeInsets.all(16),
+                                child: Center(
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                  ),
                                 ),
+                              );
+                            }
+
+                            final product = provider.filteredProducts[index];
+                            return _ProductCard(product: product);
+                          },
+                        ),
                 ),
               ],
             ),
@@ -203,16 +209,7 @@ class _ProductCard extends StatelessWidget {
           children: [
             SizedBox(
               height: 280,
-              child: Image(
-                image: product.image.isNotEmpty
-                    ? NetworkImage(product.image)
-                    : const AssetImage("assets/home_pages/Previous.png") as ImageProvider,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) => Container(
-                  color: Colors.grey[200],
-                  child: const Icon(Icons.image, size: 50, color: Colors.grey),
-                ),
-              ),
+              child: AppNetworkImage(url: product.image, width: 400),
             ),
             Padding(
               padding: const EdgeInsets.all(12),
@@ -239,7 +236,12 @@ class _ProductCard extends StatelessWidget {
                           Text(
                             product.availability.trim(),
                             style: GoogleFonts.inter(
-                              color: product.availability.toLowerCase().contains('in stock') ? Colors.green : Colors.orange,
+                              color:
+                                  product.availability.toLowerCase().contains(
+                                    'in stock',
+                                  )
+                                  ? Colors.green
+                                  : Colors.orange,
                               fontSize: 12,
                               fontWeight: FontWeight.w600,
                             ),
@@ -259,16 +261,20 @@ class _ProductCard extends StatelessWidget {
                           icon: Icons.straighten,
                           color: Colors.blueAccent,
                         ),
-                      if (product.quantity.isNotEmpty) const SizedBox(height: 4),
+                      if (product.quantity.isNotEmpty)
+                        const SizedBox(height: 4),
                       if (product.quantity.isNotEmpty)
                         _InfoChip(
                           label: "Qty: ${product.quantity}",
                           icon: Icons.inventory_2_outlined,
                           color: Colors.teal,
                         ),
-                      if ((product.size.isNotEmpty || product.quantity.isNotEmpty) && product.tags.isNotEmpty)
+                      if ((product.size.isNotEmpty ||
+                              product.quantity.isNotEmpty) &&
+                          product.tags.isNotEmpty)
                         const SizedBox(height: 4),
-                      if (product.tags.isNotEmpty) ..._buildTagChips(product.tags),
+                      if (product.tags.isNotEmpty)
+                        ..._buildTagChips(product.tags),
                     ],
                   ),
                 ],
@@ -303,8 +309,11 @@ class _InfoChip extends StatelessWidget {
   final String label;
   final IconData icon;
   final Color color;
-  const _InfoChip(
-      {required this.label, required this.icon, required this.color});
+  const _InfoChip({
+    required this.label,
+    required this.icon,
+    required this.color,
+  });
 
   @override
   Widget build(BuildContext context) {

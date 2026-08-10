@@ -3,6 +3,7 @@ import 'package:bellamarble/screen/categories/title_list_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:bellamarble/core/widgets/app_network_image.dart';
 
 import '../../core/app_Commanbar.dart';
 import '../../core/app_colors.dart';
@@ -64,33 +65,33 @@ class CategoriesScreen extends StatelessWidget {
                       ),
                     )
                   : provider.filteredCategories.isEmpty
-                      ? const Center(
-                          child: Padding(
-                            padding: EdgeInsets.all(32.0),
-                            child: Text("No categories found"),
-                          ),
-                        )
-                      : GridView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: provider.filteredCategories.length,
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
+                  ? const Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(32.0),
+                        child: Text("No categories found"),
+                      ),
+                    )
+                  : GridView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: provider.filteredCategories.length,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 3,
                             crossAxisSpacing: 12,
                             mainAxisSpacing: 12,
                           ),
-                          itemBuilder: (context, index) {
-                            final item = provider.filteredCategories[index];
+                      itemBuilder: (context, index) {
+                        final item = provider.filteredCategories[index];
 
-                            return categoryItem(
-                              context,
-                              title: item.categoryName,
-                              logo: item.logo,
-                              id: item.categoryId.toString(),
-                            );
-                          },
-                        ),
+                        return categoryItem(
+                          context,
+                          title: item.categoryName,
+                          logo: item.logo,
+                          id: item.categoryId.toString(),
+                        );
+                      },
+                    ),
             ),
           ],
         ),
@@ -131,23 +132,14 @@ class CategoriesScreen extends StatelessWidget {
         child: Column(
           children: [
             // Image Section
-            Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  image: logo.isNotEmpty
-                      ? DecorationImage(
-                          image: NetworkImage(logo),
-                          fit: BoxFit.cover,
-                        )
-                      : null,
-                ),
-              ),
-            ),
+            Expanded(child: AppNetworkImage(url: logo, width: 120)),
             // Title Section
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 2.0),
+              padding: const EdgeInsets.symmetric(
+                vertical: 4.0,
+                horizontal: 2.0,
+              ),
               color: Colors.white,
               child: Text(
                 title,

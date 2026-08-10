@@ -1,9 +1,10 @@
-import 'dart:convert';
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 import '../../../core/models/category_model.dart';
+import '../../../service/api_client.dart';
 import '../../../service/api_url.dart';
 
 class CategoriesProvider extends ChangeNotifier {
@@ -12,6 +13,10 @@ class CategoriesProvider extends ChangeNotifier {
   late stt.SpeechToText _speech;
   bool isListening = false;
   bool isLoading = false;
+
+  /// Search fired one API call per keystroke; typing "marble" cost 6 requests.
+  Timer? _debounce;
+  String _lastQuery = '';
 
   CategoriesProvider() {
     _speech = stt.SpeechToText();
@@ -23,28 +28,22 @@ class CategoriesProvider extends ChangeNotifier {
   List<CategoryModel> filteredCategories = [];
 
   /// 📥 CATEGORY LIST API
-  Future<void> fetchCategories() async {
+  Future<void> fetchCategories({bool forceRefresh = false}) async {
     isLoading = true;
     notifyListeners();
 
     try {
-      final response = await http.get(
-        Uri.parse(ApiUrls.categoryList),
+      // Shared + cached: Home and Gallery ask for this same endpoint, and they
+      // now all resolve from one request.
+      final body = await ApiClient.instance.getJson(
+        ApiUrls.categoryList,
+        forceRefresh: forceRefresh,
       );
+      final categoryResponse = CategoryResponse.fromJson(body);
 
-      if (response.statusCode == 200) {
-        final categoryResponse = CategoryResponse.fromJson(
-          jsonDecode(response.body),
-        );
-
-        debugPrint("CATEGORY LIST 👉 ${categoryResponse.message}");
-
-        if (categoryResponse.status) {
-          categories = categoryResponse.data;
-          filteredCategories = List.from(categories);
-        }
-      } else {
-        debugPrint("CATEGORY API ERROR ❌ Status: ${response.statusCode}");
+      if (categoryResponse.status) {
+        categories = categoryResponse.data;
+        filteredCategories = List.from(categories);
       }
     } catch (e) {
       debugPrint("CATEGORY API ERROR ❌ $e");
@@ -54,38 +53,55 @@ class CategoriesProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// 🔍 SEARCH
-  Future<void> filterCategories(String query) async {
-    if (query.isEmpty) {
+  /// 🔍 SEARCH — debounced so we only call the API once the user pauses.
+  void filterCategories(String query) {
+    _debounce?.cancel();
+
+    if (query.trim().isEmpty) {
+      _lastQuery = '';
       filteredCategories = List.from(categories);
       notifyListeners();
       return;
     }
 
+    // Show local matches immediately so the list reacts while typing, then
+    // confirm with the server once typing settles.
+    filteredCategories = _localMatches(query);
+    notifyListeners();
+
+    _debounce = Timer(const Duration(milliseconds: 400), () {
+      final q = query.trim();
+      if (q == _lastQuery) return;
+      _lastQuery = q;
+      _searchRemote(q);
+    });
+  }
+
+  List<CategoryModel> _localMatches(String query) {
+    final q = query.toLowerCase();
+    return categories
+        .where((cat) => cat.categoryName.toLowerCase().contains(q))
+        .toList();
+  }
+
+  Future<void> _searchRemote(String query) async {
     try {
-      final response = await http.post(
-        Uri.parse(ApiUrls.search),
-        body: {"keyword": query},
-      );
+      final data = await ApiClient.instance.postForm(ApiUrls.search, {
+        "keyword": query,
+      });
 
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> data = jsonDecode(response.body);
-
-        if (data["status"] == true && data["data"] is List) {
-          filteredCategories = (data["data"] as List)
-              .map<CategoryModel>((item) => CategoryModel.fromJson(item))
-              .toList();
-        } else {
-          filteredCategories = [];
-        }
+      if (data["status"] == true && data["data"] is List) {
+        filteredCategories = (data["data"] as List)
+            .map<CategoryModel>((item) => CategoryModel.fromJson(item))
+            .toList();
+      } else {
+        filteredCategories = [];
       }
     } catch (e) {
       debugPrint("SEARCH API ERROR ❌ $e");
-      // Fallback to local search if API fails
-      filteredCategories = categories
-          .where((cat) =>
-              cat.categoryName.toLowerCase().contains(query.toLowerCase()))
-          .toList();
+      filteredCategories = _localMatches(
+        query,
+      ); // keep local results on failure
     }
 
     notifyListeners();
@@ -116,8 +132,10 @@ class CategoriesProvider extends ChangeNotifier {
 
   @override
   void dispose() {
+    _debounce?.cancel();
     searchController.dispose();
     super.dispose();
   }
 }
+
 ////////////////////////////////////

@@ -1,14 +1,15 @@
 import 'dart:async';
-import 'dart:convert';
 import 'package:bellamarble/core/models/product_model.dart';
+import 'package:bellamarble/service/api_client.dart';
 import 'package:bellamarble/service/api_url.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 
 class HomeProvider extends ChangeNotifier {
   /// Banner Controller
-  final PageController pageController =
-  PageController(viewportFraction: 0.88, initialPage: 0); // initialPage 0 is safer when loading dynamic data
+  final PageController pageController = PageController(
+    viewportFraction: 0.88,
+    initialPage: 0,
+  ); // initialPage 0 is safer when loading dynamic data
 
   int _currentPage = 0;
   int get currentPage => _currentPage;
@@ -33,28 +34,31 @@ class HomeProvider extends ChangeNotifier {
   }
 
   Future<void> _initData() async {
-    await fetchSliders();
-    _startAutoScroll(); // Start scrolling only after we have data
-    fetchCategories();
-    fetchRecentProducts();
+    // All three endpoints are independent, so fire them together. Serialising
+    // them made the slider request block categories and products for no reason.
+    await Future.wait([
+      fetchSliders(),
+      fetchCategories(),
+      fetchRecentProducts(),
+    ]);
+    _startAutoScroll(); // safe now that bannerImages is populated
   }
 
   /// Fetch Sliders from API
-  Future<void> fetchSliders() async {
+  Future<void> fetchSliders({bool forceRefresh = false}) async {
     isSlidersLoading = true;
     notifyListeners();
 
     try {
-      final response = await http.get(Uri.parse(ApiUrls.sliderList));
+      final data = await ApiClient.instance.getJson(
+        ApiUrls.sliderList,
+        forceRefresh: forceRefresh,
+      );
 
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> data = jsonDecode(response.body);
-
-        if (data["status"] == true && data["data"] is List) {
-          bannerImages = (data["data"] as List)
-              .map<String>((item) => _proxyImage(item["image"].toString()))
-              .toList();
-        }
+      if (data["status"] == true && data["data"] is List) {
+        bannerImages = (data["data"] as List)
+            .map<String>((item) => item["image"].toString())
+            .toList();
       }
     } catch (e) {
       debugPrint("HOME SLIDER API ERROR ❌ $e");
@@ -65,27 +69,24 @@ class HomeProvider extends ChangeNotifier {
   }
 
   /// Fetch Categories from API
-  Future<void> fetchCategories() async {
+  Future<void> fetchCategories({bool forceRefresh = false}) async {
     isCategoriesLoading = true;
     notifyListeners();
 
     try {
-      final response = await http.get(
-        Uri.parse(ApiUrls.categoryList),
+      final data = await ApiClient.instance.getJson(
+        ApiUrls.categoryList,
+        forceRefresh: forceRefresh,
       );
 
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> data = jsonDecode(response.body);
-
-        if (data["status"] == true && data["data"] is List) {
-          categories = (data["data"] as List).map<Map<String, String>>((item) {
-            return {
-              "id": item["category_id"]?.toString() ?? "",
-              "title": item["category_name"]?.toString() ?? "",
-              "logo": _proxyImage(item["logo"]?.toString() ?? ""),
-            };
-          }).toList();
-        }
+      if (data["status"] == true && data["data"] is List) {
+        categories = (data["data"] as List).map<Map<String, String>>((item) {
+          return {
+            "id": item["category_id"]?.toString() ?? "",
+            "title": item["category_name"]?.toString() ?? "",
+            "logo": item["logo"]?.toString() ?? "",
+          };
+        }).toList();
       }
     } catch (e) {
       debugPrint("HOME CATEGORY API ERROR ❌ $e");
@@ -96,24 +97,19 @@ class HomeProvider extends ChangeNotifier {
   }
 
   /// Fetch Recent Products from API
-  Future<void> fetchRecentProducts() async {
+  Future<void> fetchRecentProducts({bool forceRefresh = false}) async {
     isProductsLoading = true;
     notifyListeners();
 
     try {
-      final response = await http.get(
-        Uri.parse('${ApiUrls.productList}?page=1&limit=10'),
+      final body = await ApiClient.instance.getJson(
+        '${ApiUrls.productList}?page=1&limit=10',
+        forceRefresh: forceRefresh,
       );
+      final productResponse = ProductListResponse.fromJson(body);
 
-      if (response.statusCode == 200) {
-        final productResponse = ProductListResponse.fromJson(
-          jsonDecode(response.body),
-        );
-
-        if (productResponse.status) {
-          recentProducts = productResponse.data;
-          debugPrint("RECENT PRODUCTS ✅ Fetched ${recentProducts.length} products");
-        }
+      if (productResponse.status) {
+        recentProducts = productResponse.data;
       }
     } catch (e) {
       debugPrint("RECENT PRODUCTS API ERROR ❌ $e");
@@ -126,7 +122,7 @@ class HomeProvider extends ChangeNotifier {
   void _startAutoScroll() {
     _timer?.cancel(); // Cancel any existing timer
     if (bannerImages.isEmpty) return;
-    
+
     _timer = Timer.periodic(const Duration(seconds: 3), (timer) {
       if (pageController.hasClients && bannerImages.isNotEmpty) {
         _currentPage = (_currentPage + 1) % bannerImages.length;
@@ -149,11 +145,11 @@ class HomeProvider extends ChangeNotifier {
     recentProducts.clear();
     bannerImages.clear();
     notifyListeners();
-    
+
     await Future.wait([
-      fetchSliders(),
-      fetchCategories(),
-      fetchRecentProducts(),
+      fetchSliders(forceRefresh: true),
+      fetchCategories(forceRefresh: true),
+      fetchRecentProducts(forceRefresh: true),
     ]);
 
     _startAutoScroll(); // restart timer
@@ -163,20 +159,13 @@ class HomeProvider extends ChangeNotifier {
   void changePage(int index) {
     _currentPage = index;
     if (pageController.hasClients) {
-       pageController.animateToPage(
-         _currentPage,
-         duration: const Duration(milliseconds: 500),
-         curve: Curves.easeInOut,
-       );
+      pageController.animateToPage(
+        _currentPage,
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.easeInOut,
+      );
     }
     notifyListeners();
-  }
-
-
-  static String _proxyImage(String url) {
-    if (url.isEmpty) return url;
-    final cleanUrl = url.replaceFirst('https://', '').replaceFirst('http://', '');
-    return "https://images.weserv.nl/?url=$cleanUrl";
   }
 
   @override

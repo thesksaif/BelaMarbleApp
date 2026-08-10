@@ -10,6 +10,7 @@ import '../../../core/app_colors.dart';
 import '../../../core/app_images.dart';
 import '../../../core/app_Commanbar.dart';
 import 'package:bellamarble/core/widgets/shimmer_loading.dart';
+import 'package:bellamarble/core/widgets/app_network_image.dart';
 
 class GalleryImages extends StatelessWidget {
   const GalleryImages({super.key});
@@ -40,8 +41,7 @@ class GalleryImages extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: Container(
                         height: 54,
-                        padding:
-                        const EdgeInsets.symmetric(horizontal: 12),
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
                         decoration: BoxDecoration(
                           color: AppColors.search,
                           borderRadius: BorderRadius.circular(12),
@@ -52,15 +52,11 @@ class GalleryImages extends StatelessWidget {
                             const SizedBox(width: 10),
                             Expanded(
                               child: TextField(
-                                controller:
-                                provider.searchController,
-                                onChanged:
-                                provider.filterProducts,
+                                controller: provider.searchController,
+                                onChanged: provider.filterProducts,
                                 decoration: InputDecoration(
-                                  hintText:
-                                  "Search Anything...",
-                                  hintStyle:
-                                  GoogleFonts.poppins(
+                                  hintText: "Search Anything...",
+                                  hintStyle: GoogleFonts.poppins(
                                     color: Colors.grey,
                                   ),
                                   border: InputBorder.none,
@@ -68,8 +64,7 @@ class GalleryImages extends StatelessWidget {
                               ),
                             ),
                             GestureDetector(
-                              onTap:
-                              provider.toggleListening,
+                              onTap: provider.toggleListening,
                               child: Icon(
                                 provider.isListening
                                     ? Icons.mic
@@ -92,22 +87,23 @@ class GalleryImages extends StatelessWidget {
                       child: provider.isLoading
                           ? const ProductGridShimmer(itemCount: 8)
                           : provider.filteredProducts.isEmpty
-                              ? const Center(child: Text("No products found"))
-                              : GridView.builder(
-                                  shrinkWrap: true,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  itemCount: provider.filteredProducts.length,
-                                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                          ? const Center(child: Text("No products found"))
+                          : GridView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: provider.filteredProducts.length,
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
                                     crossAxisCount: 2,
                                     crossAxisSpacing: 12,
                                     mainAxisSpacing: 12,
                                     childAspectRatio: 0.68,
                                   ),
-                                  itemBuilder: (context, index) {
-                                    final item = provider.filteredProducts[index];
-                                    return _productCard(item, provider);
-                                  },
-                                ),
+                              itemBuilder: (context, index) {
+                                final item = provider.filteredProducts[index];
+                                return _productCard(item, provider);
+                              },
+                            ),
                     ),
 
                     const SizedBox(height: 120),
@@ -129,11 +125,11 @@ class GalleryImages extends StatelessWidget {
                         maxScale: 4,
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(16),
-                          child: Image.network(
-                            provider.selectedImage!,
+                          child: AppNetworkImage(
+                            url: provider.selectedImage!,
                             width: MediaQuery.of(context).size.width * 0.95,
                             fit: BoxFit.contain,
-                            errorBuilder: (_,__,___) => const Icon(Icons.error, color: Colors.white),
+                            fullSize: true,
                           ),
                         ),
                       ),
@@ -147,10 +143,7 @@ class GalleryImages extends StatelessWidget {
     );
   }
 
-  Widget _productCard(
-      Product item,
-      GalleryImagesProvider provider,
-      ) {
+  Widget _productCard(Product item, GalleryImagesProvider provider) {
     return GestureDetector(
       onTap: () {
         if (item.image.isNotEmpty) {
@@ -172,14 +165,8 @@ class GalleryImages extends StatelessWidget {
                 child: Stack(
                   fit: StackFit.expand,
                   children: [
-                    item.image.isNotEmpty
-                        ? Image.network(
-                            item.image,
-                            fit: BoxFit.cover,
-                            errorBuilder: (_,__,___) => Container(color: Colors.grey[200], child: const Icon(Icons.broken_image)),
-                          )
-                        : Container(color: Colors.grey[200], child: const Icon(Icons.image)),
-                    
+                    AppNetworkImage(url: item.image, width: 200),
+
                     Container(
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
@@ -192,20 +179,22 @@ class GalleryImages extends StatelessWidget {
                         ),
                       ),
                     ),
-                    if (item.availability.isNotEmpty) // Use availability or create generic code if not available
-                    Positioned(
-                      bottom: 8,
-                      right: 8,
-                      child: Text(
-                        item.availability,
-                        style: const TextStyle(
-                          fontFamily: 'PlayfairDisplay',
-                          color: Colors.white,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w900,
+                    if (item
+                        .availability
+                        .isNotEmpty) // Use availability or create generic code if not available
+                      Positioned(
+                        bottom: 8,
+                        right: 8,
+                        child: Text(
+                          item.availability,
+                          style: const TextStyle(
+                            fontFamily: 'PlayfairDisplay',
+                            color: Colors.white,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w900,
+                          ),
                         ),
                       ),
-                    ),
                   ],
                 ),
               ),
@@ -219,9 +208,7 @@ class GalleryImages extends StatelessWidget {
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontFamily: 'PlayfairDisplay',
-                  ),
+                  style: const TextStyle(fontFamily: 'PlayfairDisplay'),
                 ),
               ),
             ),

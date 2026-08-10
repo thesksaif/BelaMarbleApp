@@ -15,16 +15,20 @@ class ProductDetailProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final response = await http.get(Uri.parse('${ApiUrls.productDetails}?product_id=$productId'));
-      debugPrint("PRODUCT DETAIL API: ${response.statusCode} - ${response.body}");
-      
+      final response = await http.get(
+        Uri.parse('${ApiUrls.productDetails}?product_id=$productId'),
+      );
+      debugPrint(
+        "PRODUCT DETAIL API: ${response.statusCode} - ${response.body}",
+      );
+
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         final detailResponse = ProductDetailResponse.fromJson(data);
         if (detailResponse.status) {
           product = detailResponse.data;
         } else {
-           errorMessage = detailResponse.message;
+          errorMessage = detailResponse.message;
         }
       } else {
         errorMessage = 'Failed to load product details';
@@ -33,11 +37,11 @@ class ProductDetailProvider extends ChangeNotifier {
       errorMessage = 'Error: $e';
       debugPrint("PRODUCT DETAIL ERROR: $e");
     }
-    
+
     isLoading = false;
     notifyListeners();
   }
-  
+
   void setInitialProduct(Product initialProduct) {
     product = initialProduct;
     // We update UI immediately with initial data

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:bellamarble/core/widgets/app_network_image.dart';
 
 import '../../core/app_colors.dart';
 import '../../core/app_Commanbar.dart';
@@ -15,8 +16,11 @@ class TileListScreen extends StatefulWidget {
   final String title;
   final String categoryId;
 
-  const TileListScreen(
-      {super.key, required this.title, required this.categoryId});
+  const TileListScreen({
+    super.key,
+    required this.title,
+    required this.categoryId,
+  });
 
   @override
   State<TileListScreen> createState() => _TileListScreenState();
@@ -28,8 +32,9 @@ class _TileListScreenState extends State<TileListScreen> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(() =>
-        context.read<TileListProvider>().fetchProducts(widget.categoryId));
+    Future.microtask(
+      () => context.read<TileListProvider>().fetchProducts(widget.categoryId),
+    );
 
     _scrollController.addListener(() {
       if (_scrollController.position.pixels >=
@@ -81,12 +86,14 @@ class _TileListScreenState extends State<TileListScreen> {
                           ),
                           decoration: InputDecoration(
                             hintText: "Search Anything...",
-                            hintStyle:
-                                GoogleFonts.inter(color: Colors.grey.shade500),
+                            hintStyle: GoogleFonts.inter(
+                              color: Colors.grey.shade500,
+                            ),
                             border: InputBorder.none,
                             isDense: true,
-                            contentPadding:
-                                const EdgeInsets.symmetric(vertical: 12),
+                            contentPadding: const EdgeInsets.symmetric(
+                              vertical: 12,
+                            ),
                           ),
                         ),
                       ),
@@ -120,140 +127,163 @@ class _TileListScreenState extends State<TileListScreen> {
                             padding: EdgeInsets.only(bottom: 16),
                             child: ShimmerLoading(
                               child: SizedBox(
-                                  height: 350,
-                                  width: double.infinity,
-                                  child: ColoredBox(color: Colors.white)),
+                                height: 350,
+                                width: double.infinity,
+                                child: ColoredBox(color: Colors.white),
+                              ),
                             ),
                           ),
                         )
                       : provider.errorMessage.isNotEmpty
-                          ? Center(child: Text(provider.errorMessage))
-                          : provider.filteredProducts.isEmpty
-                              ? const Center(child: Text("No products found"))
-                              : ListView.builder(
-                                  controller: _scrollController,
-                                  physics: const AlwaysScrollableScrollPhysics(),
-                                  itemCount: provider.filteredProducts.length + (provider.isLoadingMore ? 1 : 0),
-                                  itemBuilder: (context, index) {
-                                    if (index == provider.filteredProducts.length) {
-                                      return const Padding(
-                                        padding: EdgeInsets.symmetric(vertical: 20),
-                                        child: Center(child: CircularProgressIndicator()),
-                                      );
-                                    }
+                      ? Center(child: Text(provider.errorMessage))
+                      : provider.filteredProducts.isEmpty
+                      ? const Center(child: Text("No products found"))
+                      : ListView.builder(
+                          controller: _scrollController,
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          itemCount:
+                              provider.filteredProducts.length +
+                              (provider.isLoadingMore ? 1 : 0),
+                          itemBuilder: (context, index) {
+                            if (index == provider.filteredProducts.length) {
+                              return const Padding(
+                                padding: EdgeInsets.symmetric(vertical: 20),
+                                child: Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                              );
+                            }
 
-                                    final product = provider.filteredProducts[index];
+                            final product = provider.filteredProducts[index];
 
-                                    return GestureDetector(
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (_) =>
-                                                TileDetailScreen(
-                                              title: product.name,
-                                              product: product,
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                      child: Container(
-                                        margin: const EdgeInsets.only(bottom: 16),
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius: BorderRadius.circular(16),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.black.withOpacity(0.05),
-                                              blurRadius: 8,
-                                              offset: const Offset(0, 4),
-                                            ),
-                                          ],
-                                        ),
-                                        clipBehavior: Clip.antiAlias,
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            SizedBox(
-                                              height: 280,
-                                              child: Image(
-                                                image: product.image.isNotEmpty
-                                                    ? NetworkImage(product.image)
-                                                    : const AssetImage("assets/home_pages/Previous.png") as ImageProvider,
-                                                fit: BoxFit.cover,
-                                                errorBuilder: (context, error, stackTrace) => Container(
-                                                  color: Colors.grey[200],
-                                                  child: const Icon(Icons.image, size: 50, color: Colors.grey),
+                            return GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => TileDetailScreen(
+                                      title: product.name,
+                                      product: product,
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: Container(
+                                margin: const EdgeInsets.only(bottom: 16),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(16),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.05),
+                                      blurRadius: 8,
+                                      offset: const Offset(0, 4),
+                                    ),
+                                  ],
+                                ),
+                                clipBehavior: Clip.antiAlias,
+                                child: Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    SizedBox(
+                                      height: 280,
+                                      child: AppNetworkImage(
+                                        url: product.image,
+                                        width: 400,
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(12),
+                                      child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                        children: [
+                                          // ── LEFT: Name + Availability ──
+                                          Expanded(
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.end,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  product.name,
+                                                  style: GoogleFonts.inter(
+                                                    color: AppColors.darkblue,
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w700,
+                                                  ),
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
                                                 ),
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: const EdgeInsets.all(12),
-                                              child: Row(
-                                                crossAxisAlignment: CrossAxisAlignment.end,
-                                                children: [
-                                                  // ── LEFT: Name + Availability ──
-                                                  Expanded(
-                                                    child: Column(
-                                                      mainAxisAlignment: MainAxisAlignment.end,
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                      children: [
-                                                        Text(
-                                                          product.name,
-                                                          style: GoogleFonts.inter(
-                                                            color: AppColors.darkblue,
-                                                            fontSize: 16,
-                                                            fontWeight: FontWeight.w700,
-                                                          ),
-                                                          maxLines: 1,
-                                                          overflow: TextOverflow.ellipsis,
-                                                        ),
-                                                        if (product.availability.isNotEmpty)
-                                                          Text(
-                                                            product.availability.trim(),
-                                                            style: GoogleFonts.inter(
-                                                              color: product.availability.toLowerCase().contains('in stock') ? Colors.green : Colors.orange,
-                                                              fontSize: 12,
-                                                              fontWeight: FontWeight.w600,
-                                                            ),
-                                                          ),
-                                                      ],
+                                                if (product
+                                                    .availability
+                                                    .isNotEmpty)
+                                                  Text(
+                                                    product.availability.trim(),
+                                                    style: GoogleFonts.inter(
+                                                      color:
+                                                          product.availability
+                                                              .toLowerCase()
+                                                              .contains(
+                                                                'in stock',
+                                                              )
+                                                          ? Colors.green
+                                                          : Colors.orange,
+                                                      fontSize: 12,
+                                                      fontWeight:
+                                                          FontWeight.w600,
                                                     ),
                                                   ),
-                                                  const SizedBox(width: 8),
-                                                  // ── RIGHT: Size + Qty + Tags ──
-                                                  Column(
-                                                    mainAxisAlignment: MainAxisAlignment.end,
-                                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                                    children: [
-                                                      if (product.size.isNotEmpty)
-                                                        _InfoChip(
-                                                          label: product.size,
-                                                          icon: Icons.straighten,
-                                                          color: Colors.blueAccent,
-                                                        ),
-                                                      if (product.quantity.isNotEmpty) const SizedBox(height: 4),
-                                                      if (product.quantity.isNotEmpty)
-                                                        _InfoChip(
-                                                          label: "Qty: ${product.quantity}",
-                                                          icon: Icons.inventory_2_outlined,
-                                                          color: Colors.teal,
-                                                        ),
-                                                      if ((product.size.isNotEmpty || product.quantity.isNotEmpty) && product.tags.isNotEmpty)
-                                                        const SizedBox(height: 4),
-                                                      if (product.tags.isNotEmpty) ..._buildTagChips(product.tags),
-                                                    ],
-                                                  ),
-                                                ],
-                                              ),
+                                              ],
                                             ),
-                                          ],
-                                        ),
+                                          ),
+                                          const SizedBox(width: 8),
+                                          // ── RIGHT: Size + Qty + Tags ──
+                                          Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.end,
+                                            children: [
+                                              if (product.size.isNotEmpty)
+                                                _InfoChip(
+                                                  label: product.size,
+                                                  icon: Icons.straighten,
+                                                  color: Colors.blueAccent,
+                                                ),
+                                              if (product.quantity.isNotEmpty)
+                                                const SizedBox(height: 4),
+                                              if (product.quantity.isNotEmpty)
+                                                _InfoChip(
+                                                  label:
+                                                      "Qty: ${product.quantity}",
+                                                  icon: Icons
+                                                      .inventory_2_outlined,
+                                                  color: Colors.teal,
+                                                ),
+                                              if ((product.size.isNotEmpty ||
+                                                      product
+                                                          .quantity
+                                                          .isNotEmpty) &&
+                                                  product.tags.isNotEmpty)
+                                                const SizedBox(height: 4),
+                                              if (product.tags.isNotEmpty)
+                                                ..._buildTagChips(product.tags),
+                                            ],
+                                          ),
+                                        ],
                                       ),
-                                    );
-                                  },
+                                    ),
+                                  ],
                                 ),
+                              ),
+                            );
+                          },
+                        ),
                 ),
               ],
             ),

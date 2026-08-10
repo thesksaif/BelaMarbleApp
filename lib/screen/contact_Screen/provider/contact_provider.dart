@@ -23,7 +23,9 @@ class ContactProvider extends ChangeNotifier {
       final response = await http.get(Uri.parse(ApiUrls.webSetting));
 
       if (response.statusCode == 200) {
-        final settingResponse = WebSettingResponse.fromJson(jsonDecode(response.body));
+        final settingResponse = WebSettingResponse.fromJson(
+          jsonDecode(response.body),
+        );
 
         if (settingResponse.status && settingResponse.data != null) {
           final data = settingResponse.data!;

@@ -1,4 +1,3 @@
-
 import 'package:bellamarble/screen/categories/provider/categories_provider.dart';
 import 'package:bellamarble/screen/categories/provider/titlelist_provider.dart';
 import 'package:bellamarble/screen/categories/provider/product_detail_provider.dart';
@@ -28,12 +27,8 @@ void main() async {
         ChangeNotifierProvider(create: (_) => HomeProvider()),
         ChangeNotifierProvider(create: (_) => ProductDetailProvider()),
         ChangeNotifierProvider(create: (_) => ProductListProvider()),
-
-
       ],
       child: const MyApp(),
     ),
   );
 }
-
-

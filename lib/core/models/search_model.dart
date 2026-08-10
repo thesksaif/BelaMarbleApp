@@ -31,10 +31,7 @@ class SearchTotal {
   final int categories;
   final int products;
 
-  SearchTotal({
-    required this.categories,
-    required this.products,
-  });
+  SearchTotal({required this.categories, required this.products});
 
   factory SearchTotal.fromJson(Map<String, dynamic> json) {
     return SearchTotal(
@@ -48,18 +45,17 @@ class SearchData {
   final List<SearchCategory> categories;
   final List<SearchProduct> products;
 
-  SearchData({
-    required this.categories,
-    required this.products,
-  });
+  SearchData({required this.categories, required this.products});
 
   factory SearchData.fromJson(Map<String, dynamic> json) {
     return SearchData(
-      categories: (json['categories'] as List<dynamic>?)
+      categories:
+          (json['categories'] as List<dynamic>?)
               ?.map((item) => SearchCategory.fromJson(item))
               .toList() ??
           [],
-      products: (json['products'] as List<dynamic>?)
+      products:
+          (json['products'] as List<dynamic>?)
               ?.map((item) => SearchProduct.fromJson(item))
               .toList() ??
           [],

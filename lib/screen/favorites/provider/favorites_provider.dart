@@ -33,10 +33,9 @@ class FavoritesProvider extends ChangeNotifier {
   // 🔍 Search
   void onSearch(String value) {
     filteredTiles = tiles
-        .where((tile) =>
-        tile["title"]!
-            .toLowerCase()
-            .contains(value.toLowerCase()))
+        .where(
+          (tile) => tile["title"]!.toLowerCase().contains(value.toLowerCase()),
+        )
         .toList();
     notifyListeners();
   }

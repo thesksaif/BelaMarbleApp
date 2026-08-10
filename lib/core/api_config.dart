@@ -17,6 +17,5 @@ class ApiConfig {
   static const String productionBaseUrl = "https://belamarble.com/API";
 
   /// Base URL used by the app. Change via [useLocalApi] and [localBaseUrl].
-  static String get baseUrl =>
-      useLocalApi ? localBaseUrl : productionBaseUrl;
+  static String get baseUrl => useLocalApi ? localBaseUrl : productionBaseUrl;
 }

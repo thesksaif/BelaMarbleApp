@@ -20,7 +20,11 @@ class ProductGridShimmer extends StatelessWidget {
   final int itemCount;
   final double childAspectRatio;
 
-  const ProductGridShimmer({super.key, this.itemCount = 6, this.childAspectRatio = 0.68});
+  const ProductGridShimmer({
+    super.key,
+    this.itemCount = 6,
+    this.childAspectRatio = 0.68,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -103,17 +107,9 @@ class ShimmerProductCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 6),
-            Container(
-              height: 16,
-              width: 80,
-              color: Colors.white,
-            ),
+            Container(height: 16, width: 80, color: Colors.white),
             const SizedBox(height: 4),
-             Container(
-              height: 16,
-              width: 60,
-              color: Colors.white,
-            ),
+            Container(height: 16, width: 60, color: Colors.white),
           ],
         ),
       ),
@@ -144,30 +140,14 @@ class DetailShimmer extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Container(
-                  height: 20,
-                  width: 150,
-                  color: Colors.white,
-                ),
-                Container(
-                  height: 20,
-                  width: 80,
-                  color: Colors.white,
-                ),
+                Container(height: 20, width: 150, color: Colors.white),
+                Container(height: 20, width: 80, color: Colors.white),
               ],
             ),
             const SizedBox(height: 6),
-            Container(
-              height: 16,
-              width: double.infinity,
-              color: Colors.white,
-            ),
+            Container(height: 16, width: double.infinity, color: Colors.white),
             const SizedBox(height: 12),
-            Container(
-              height: 30,
-              width: 100,
-              color: Colors.white,
-            ),
+            Container(height: 30, width: 100, color: Colors.white),
             const SizedBox(height: 16),
             Container(
               height: 200,

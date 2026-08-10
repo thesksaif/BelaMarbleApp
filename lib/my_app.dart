@@ -39,10 +39,10 @@ class MyApp extends StatelessWidget {
           color: Colors.grey[200], // Background color outside the app frame
           child: Center(
             child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 500), // Mobile frame width
-              child: ClipRRect(
-                child: child!,
-              ),
+              constraints: const BoxConstraints(
+                maxWidth: 500,
+              ), // Mobile frame width
+              child: ClipRRect(child: child!),
             ),
           ),
         );

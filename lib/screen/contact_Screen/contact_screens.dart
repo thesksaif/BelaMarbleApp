@@ -37,10 +37,7 @@ class _ContactScreensState extends State<ContactScreens> {
                 ),
               ),
               child: Center(
-                child: Image.asset(
-                  "assets/contact/image 27.png",
-                  height: 60,
-                ),
+                child: Image.asset("assets/contact/image 27.png", height: 60),
               ),
             ),
           ),
@@ -87,15 +84,11 @@ class _ContactScreensState extends State<ContactScreens> {
       color: Colors.white,
       borderRadius: BorderRadius.circular(16),
       boxShadow: [
-        BoxShadow(
-          color: Colors.black.withOpacity(0.05),
-          blurRadius: 10,
-        ),
+        BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10),
       ],
     );
   }
 }
-
 
 /// ================= SMALL WIDGETS =================
 
@@ -120,10 +113,7 @@ class _sectionTitle extends StatelessWidget {
         const SizedBox(width: 8),
         Text(
           title,
-          style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          ),
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
         ),
       ],
     );
@@ -147,7 +137,9 @@ class _InfoRow extends StatelessWidget {
             padding: const EdgeInsets.only(bottom: 22),
             child: SvgPicture.asset(
               iconPath,
-              color: AppColors.darkblue,height: 20,width: 20,
+              color: AppColors.darkblue,
+              height: 20,
+              width: 20,
             ),
           ),
           const SizedBox(width: 12),
@@ -156,18 +148,10 @@ class _InfoRow extends StatelessWidget {
             children: [
               Text(
                 label,
-                style: const TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey,
-                ),
+                style: const TextStyle(fontSize: 12, color: Colors.grey),
               ),
               const SizedBox(height: 2),
-              Text(
-                value,
-                style: const TextStyle(
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
+              Text(value, style: const TextStyle(fontWeight: FontWeight.w500)),
             ],
           ),
         ],

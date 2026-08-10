@@ -6,6 +6,7 @@ import 'package:bellamarble/screen/home/provider/search_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:bellamarble/core/widgets/app_network_image.dart';
 
 class SearchResultsScreen extends StatelessWidget {
   final String initialQuery;
@@ -31,7 +32,7 @@ class SearchResultsScreen extends StatelessWidget {
             return Column(
               children: [
                 const SizedBox(height: 16),
-                
+
                 /// Search Bar
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -74,20 +75,20 @@ class SearchResultsScreen extends StatelessWidget {
                   child: provider.isLoading
                       ? const Center(child: CircularProgressIndicator())
                       : provider.errorMessage.isNotEmpty
-                          ? Center(
-                              child: Text(
-                                provider.errorMessage,
-                                style: GoogleFonts.poppins(color: Colors.red),
-                              ),
-                            )
-                          : provider.searchResponse == null
-                              ? Center(
-                                  child: Text(
-                                    "Enter a search query",
-                                    style: GoogleFonts.poppins(color: Colors.grey),
-                                  ),
-                                )
-                              : _buildResults(context, provider),
+                      ? Center(
+                          child: Text(
+                            provider.errorMessage,
+                            style: GoogleFonts.poppins(color: Colors.red),
+                          ),
+                        )
+                      : provider.searchResponse == null
+                      ? Center(
+                          child: Text(
+                            "Enter a search query",
+                            style: GoogleFonts.poppins(color: Colors.grey),
+                          ),
+                        )
+                      : _buildResults(context, provider),
                 ),
               ],
             );
@@ -128,10 +129,7 @@ class SearchResultsScreen extends StatelessWidget {
             /// Search Summary
             Text(
               "Found ${response.total.categories} categories and ${response.total.products} products",
-              style: GoogleFonts.poppins(
-                fontSize: 14,
-                color: Colors.grey[600],
-              ),
+              style: GoogleFonts.poppins(fontSize: 14, color: Colors.grey[600]),
             ),
             const SizedBox(height: 20),
 
@@ -191,7 +189,7 @@ class SearchResultsScreen extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (_) => TileListScreen(
-              title: category.categoryName, 
+              title: category.categoryName,
               categoryId: category.categoryId.toString(),
             ),
           ),
@@ -208,22 +206,17 @@ class SearchResultsScreen extends StatelessWidget {
         child: Row(
           children: [
             /// Category Logo
-            Container(
+            SizedBox(
               width: 60,
               height: 60,
-              decoration: BoxDecoration(
+              child: AppNetworkImage(
+                url: category.logo,
+                width: 60,
                 borderRadius: BorderRadius.circular(8),
-                color: Colors.grey[200],
-                image: category.logo.isNotEmpty
-                    ? DecorationImage(
-                        image: NetworkImage(category.logo),
-                        fit: BoxFit.cover,
-                      )
-                    : null,
               ),
             ),
             const SizedBox(width: 12),
-            
+
             /// Category Name
             Expanded(
               child: Text(
@@ -234,7 +227,7 @@ class SearchResultsScreen extends StatelessWidget {
                 ),
               ),
             ),
-            
+
             const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
           ],
         ),
@@ -282,20 +275,15 @@ class SearchResultsScreen extends StatelessWidget {
           children: [
             /// Product Image
             Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-                  color: Colors.grey[200],
-                  image: product.image.isNotEmpty
-                      ? DecorationImage(
-                          image: NetworkImage(product.image),
-                          fit: BoxFit.cover,
-                        )
-                      : null,
+              child: AppNetworkImage(
+                url: product.image,
+                width: 200,
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(12),
                 ),
               ),
             ),
-            
+
             /// Product Details
             Padding(
               padding: const EdgeInsets.all(8),
@@ -313,8 +301,8 @@ class SearchResultsScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    product.availability.isNotEmpty 
-                        ? product.availability 
+                    product.availability.isNotEmpty
+                        ? product.availability
                         : "Stock status not available",
                     style: GoogleFonts.poppins(
                       fontSize: 12,

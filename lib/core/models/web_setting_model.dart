@@ -26,17 +26,15 @@ class WebSettingResponse {
   final String message;
   final WebSettingModel? data;
 
-  WebSettingResponse({
-    required this.status,
-    required this.message,
-    this.data,
-  });
+  WebSettingResponse({required this.status, required this.message, this.data});
 
   factory WebSettingResponse.fromJson(Map<String, dynamic> json) {
     return WebSettingResponse(
       status: json['status'] ?? false,
       message: json['message'] ?? '',
-      data: json['data'] != null ? WebSettingModel.fromJson(json['data']) : null,
+      data: json['data'] != null
+          ? WebSettingModel.fromJson(json['data'])
+          : null,
     );
   }
 }

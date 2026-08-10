@@ -31,8 +31,10 @@ class SearchProvider extends ChangeNotifier {
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         searchResponse = SearchResponse.fromJson(data);
-        
-        debugPrint("SEARCH API ✅ Found: ${searchResponse!.total.categories} categories, ${searchResponse!.total.products} products");
+
+        debugPrint(
+          "SEARCH API ✅ Found: ${searchResponse!.total.categories} categories, ${searchResponse!.total.products} products",
+        );
       } else {
         errorMessage = 'Failed to search';
       }

@@ -39,14 +39,10 @@ class FavoritesScreen extends StatelessWidget {
                         child: TextField(
                           controller: provider.searchController,
                           onChanged: provider.onSearch,
-                          style: GoogleFonts.poppins(
-                            fontSize: 14,
-                          ),
+                          style: GoogleFonts.poppins(fontSize: 14),
                           decoration: InputDecoration(
                             hintText: "Search Anything...",
-                            hintStyle: GoogleFonts.poppins(
-                              color: Colors.grey,
-                            ),
+                            hintStyle: GoogleFonts.poppins(color: Colors.grey),
                             border: InputBorder.none,
                           ),
                         ),
@@ -58,9 +54,7 @@ class FavoritesScreen extends StatelessWidget {
                               : provider.startListening();
                         },
                         child: Icon(
-                          provider.isListening
-                              ? Icons.mic
-                              : Icons.mic_none,
+                          provider.isListening ? Icons.mic : Icons.mic_none,
                           color: AppColors.darkblue,
                         ),
                       ),
@@ -82,9 +76,8 @@ class FavoritesScreen extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (_) => TileDetailScreen(
-                                title: tile["title"]!,
-                              ),
+                              builder: (_) =>
+                                  TileDetailScreen(title: tile["title"]!),
                             ),
                           );
                         },
@@ -112,15 +105,12 @@ class FavoritesScreen extends StatelessWidget {
                               ),
                             ),
                             child: Row(
-                              mainAxisAlignment:
-                              MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
                                 Column(
-                                  crossAxisAlignment:
-                                  CrossAxisAlignment.start,
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.end,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
                                     Text(
                                       tile["title"]!,
@@ -140,10 +130,7 @@ class FavoritesScreen extends StatelessWidget {
                                     ),
                                   ],
                                 ),
-                                const Icon(
-                                  Icons.favorite,
-                                  color: Colors.red,
-                                ),
+                                const Icon(Icons.favorite, color: Colors.red),
                               ],
                             ),
                           ),

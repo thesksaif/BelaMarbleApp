@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:bellamarble/core/models/product_model.dart';
 import 'package:bellamarble/screen/categories/provider/product_detail_provider.dart';
 import 'package:bellamarble/core/widgets/shimmer_loading.dart';
+import 'package:bellamarble/core/widgets/app_network_image.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';
@@ -56,10 +57,11 @@ class _TileDetailScreenState extends State<TileDetailScreen> {
 
           if (product == null) {
             return Center(
-                child: Text(
-              error.isNotEmpty ? error : "Product not found",
-              style: GoogleFonts.inter(fontSize: 15),
-            ));
+              child: Text(
+                error.isNotEmpty ? error : "Product not found",
+                style: GoogleFonts.inter(fontSize: 15),
+              ),
+            );
           }
 
           return Stack(
@@ -77,21 +79,10 @@ class _TileDetailScreenState extends State<TileDetailScreen> {
                       child: SizedBox(
                         width: double.infinity,
                         height: screenHeight * 0.55,
-                        child: product.image.isNotEmpty
-                            ? Image.network(
-                                product.image,
-                                width: double.infinity,
-                                height: screenHeight * 0.55,
-                                fit: BoxFit.cover,
-                                errorBuilder: (_, __, ___) => Container(
-                                  color: Colors.grey[300],
-                                  child: const Icon(Icons.broken_image, size: 60),
-                                ),
-                              )
-                            : Container(
-                                color: Colors.grey[300],
-                                child: const Icon(Icons.image, size: 60),
-                              ),
+                        child: AppNetworkImage(
+                          url: product.image,
+                          width: MediaQuery.of(context).size.width,
+                        ),
                       ),
                     ),
 
@@ -103,8 +94,7 @@ class _TileDetailScreenState extends State<TileDetailScreen> {
                         children: [
                           /// Name + Availability
                           Row(
-                            mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Expanded(
@@ -123,16 +113,20 @@ class _TileDetailScreenState extends State<TileDetailScreen> {
                               if (product.availability.isNotEmpty)
                                 Container(
                                   padding: const EdgeInsets.symmetric(
-                                      horizontal: 10, vertical: 4),
+                                    horizontal: 10,
+                                    vertical: 4,
+                                  ),
                                   decoration: BoxDecoration(
-                                    color: product.availability
+                                    color:
+                                        product.availability
                                             .toLowerCase()
                                             .contains('in stock')
                                         ? Colors.green.withOpacity(0.12)
                                         : Colors.orange.withOpacity(0.12),
                                     borderRadius: BorderRadius.circular(20),
                                     border: Border.all(
-                                      color: product.availability
+                                      color:
+                                          product.availability
                                               .toLowerCase()
                                               .contains('in stock')
                                           ? Colors.green
@@ -144,7 +138,8 @@ class _TileDetailScreenState extends State<TileDetailScreen> {
                                     style: GoogleFonts.inter(
                                       fontSize: 12,
                                       fontWeight: FontWeight.w600,
-                                      color: product.availability
+                                      color:
+                                          product.availability
                                               .toLowerCase()
                                               .contains('in stock')
                                           ? Colors.green[700]
@@ -199,8 +194,9 @@ class _TileDetailScreenState extends State<TileDetailScreen> {
                                             (tag) => Container(
                                               padding:
                                                   const EdgeInsets.symmetric(
-                                                      horizontal: 10,
-                                                      vertical: 4),
+                                                    horizontal: 10,
+                                                    vertical: 4,
+                                                  ),
                                               decoration: BoxDecoration(
                                                 color: Colors.deepPurple
                                                     .withOpacity(0.1),
@@ -212,20 +208,18 @@ class _TileDetailScreenState extends State<TileDetailScreen> {
                                                 ),
                                               ),
                                               child: Row(
-                                                mainAxisSize:
-                                                    MainAxisSize.min,
+                                                mainAxisSize: MainAxisSize.min,
                                                 children: [
                                                   const Icon(
-                                                      Icons.label_outline,
-                                                      size: 12,
-                                                      color:
-                                                          Colors.deepPurple),
+                                                    Icons.label_outline,
+                                                    size: 12,
+                                                    color: Colors.deepPurple,
+                                                  ),
                                                   const SizedBox(width: 4),
                                                   Text(
                                                     tag,
                                                     style: GoogleFonts.inter(
-                                                      color:
-                                                          Colors.deepPurple,
+                                                      color: Colors.deepPurple,
                                                       fontSize: 12,
                                                       fontWeight:
                                                           FontWeight.w600,
@@ -248,8 +242,7 @@ class _TileDetailScreenState extends State<TileDetailScreen> {
                             padding: const EdgeInsets.all(16),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(14),
-                              border:
-                                  Border.all(color: Colors.grey.shade200),
+                              border: Border.all(color: Colors.grey.shade200),
                               color: Colors.white,
                               boxShadow: [
                                 BoxShadow(
@@ -279,8 +272,7 @@ class _TileDetailScreenState extends State<TileDetailScreen> {
                                 height: 52,
                                 width: 52,
                                 decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color: AppColors.darkblue),
+                                  border: Border.all(color: AppColors.darkblue),
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 child: IconButton(
@@ -307,8 +299,7 @@ class _TileDetailScreenState extends State<TileDetailScreen> {
                                   child: Container(
                                     height: 54,
                                     decoration: BoxDecoration(
-                                      borderRadius:
-                                          BorderRadius.circular(26),
+                                      borderRadius: BorderRadius.circular(26),
                                       gradient: const LinearGradient(
                                         colors: [
                                           Color(0xff1E194A),
@@ -356,14 +347,11 @@ class _TileDetailScreenState extends State<TileDetailScreen> {
                           maxScale: 4,
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(16),
-                            child: Image.network(
-                              selectedImage!,
-                              width:
-                                  MediaQuery.of(context).size.width * 0.95,
+                            child: AppNetworkImage(
+                              url: selectedImage!,
+                              width: MediaQuery.of(context).size.width * 0.95,
                               fit: BoxFit.contain,
-                              errorBuilder: (_, __, ___) => const Icon(
-                                  Icons.error,
-                                  color: Colors.white),
+                              fullSize: true,
                             ),
                           ),
                         ),

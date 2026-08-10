@@ -1,8 +1,7 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 import '../../../core/models/category_model.dart';
+import '../../../service/api_client.dart';
 import '../../../service/api_url.dart';
 
 class GalleryProvider extends ChangeNotifier {
@@ -25,19 +24,12 @@ class GalleryProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final response = await http.get(
-        Uri.parse(ApiUrls.categoryList),
-      );
+      final body = await ApiClient.instance.getJson(ApiUrls.categoryList);
+      final categoryResponse = CategoryResponse.fromJson(body);
 
-      if (response.statusCode == 200) {
-        final categoryResponse = CategoryResponse.fromJson(
-          jsonDecode(response.body),
-        );
-
-        if (categoryResponse.status) {
-          categories = categoryResponse.data;
-          filteredCategories = List.from(categories);
-        }
+      if (categoryResponse.status) {
+        categories = categoryResponse.data;
+        filteredCategories = List.from(categories);
       }
     } catch (e) {
       debugPrint("GALLERY CATEGORY API ERROR ❌ $e");
@@ -53,8 +45,10 @@ class GalleryProvider extends ChangeNotifier {
       filteredCategories = List.from(categories);
     } else {
       filteredCategories = categories
-          .where((item) =>
-          item.categoryName.toLowerCase().contains(query.toLowerCase()))
+          .where(
+            (item) =>
+                item.categoryName.toLowerCase().contains(query.toLowerCase()),
+          )
           .toList();
     }
     notifyListeners();

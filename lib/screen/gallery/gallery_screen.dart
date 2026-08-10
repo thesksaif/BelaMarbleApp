@@ -7,6 +7,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
+import 'package:bellamarble/core/widgets/app_network_image.dart';
+
 import 'gallery_images.dart';
 
 class GalleryScreen extends StatelessWidget {
@@ -52,9 +54,7 @@ class GalleryScreen extends StatelessWidget {
                         GestureDetector(
                           onTap: provider.toggleListening,
                           child: Icon(
-                            provider.isListening
-                                ? Icons.mic
-                                : Icons.mic_none,
+                            provider.isListening ? Icons.mic : Icons.mic_none,
                             color: AppColors.darkblue,
                           ),
                         ),
@@ -71,26 +71,26 @@ class GalleryScreen extends StatelessWidget {
                   child: provider.isLoading
                       ? const Center(child: CircularProgressIndicator())
                       : provider.filteredCategories.isEmpty
-                          ? const Center(child: Text("No categories found"))
-                          : GridView.builder(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemCount: provider.filteredCategories.length,
-                              gridDelegate:
-                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                      ? const Center(child: Text("No categories found"))
+                      : GridView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: provider.filteredCategories.length,
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: 3,
                                 crossAxisSpacing: 12,
                                 mainAxisSpacing: 12,
                               ),
-                              itemBuilder: (context, index) {
-                                final item = provider.filteredCategories[index];
-                                return _categoryItem(
-                                  context,
-                                  title: item.categoryName,
-                                  logo: item.logo,
-                                );
-                              },
-                            ),
+                          itemBuilder: (context, index) {
+                            final item = provider.filteredCategories[index];
+                            return _categoryItem(
+                              context,
+                              title: item.categoryName,
+                              logo: item.logo,
+                            );
+                          },
+                        ),
                 ),
               ],
             ),
@@ -112,46 +112,43 @@ class GalleryScreen extends StatelessWidget {
           MaterialPageRoute(builder: (_) => const GalleryImages()),
         );
       },
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(14),
-          color: Colors.grey[200],
-          image: logo.isNotEmpty
-              ? DecorationImage(
-                  image: NetworkImage(logo),
-                  fit: BoxFit.cover,
-                )
-              : null,
-        ),
-        child: Container(
-          decoration: BoxDecoration(
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          ClipRRect(
             borderRadius: BorderRadius.circular(14),
-            color: Colors.black26, // Overlay for readability
+            child: AppNetworkImage(url: logo, width: 150),
           ),
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 4),
-              child: Text(
-                title,
-                textAlign: TextAlign.center,
-                style: GoogleFonts.poppins(
-                  fontSize: 10,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
-                  shadows: [
-                    const Shadow(
-                      blurRadius: 2,
-                      color: Colors.black,
-                      offset: Offset(0, 1),
-                    ),
-                  ],
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(14),
+              color: Colors.black26, // Overlay for readability
+            ),
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4),
+                child: Text(
+                  title,
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.poppins(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                    shadows: [
+                      const Shadow(
+                        blurRadius: 2,
+                        color: Colors.black,
+                        offset: Offset(0, 1),
+                      ),
+                    ],
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                 ),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
               ),
             ),
           ),
-        ),
+        ],
       ),
     );
   }

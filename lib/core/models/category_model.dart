@@ -48,7 +48,8 @@ class CategoryResponse {
       status: json['status'] ?? false,
       code: json['code'] ?? 0,
       message: json['message'] ?? '',
-      data: (json['data'] as List<dynamic>?)
+      data:
+          (json['data'] as List<dynamic>?)
               ?.map((item) => CategoryModel.fromJson(item))
               .toList() ??
           [],

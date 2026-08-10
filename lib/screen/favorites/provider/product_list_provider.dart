@@ -63,9 +63,10 @@ class ProductListProvider extends ChangeNotifier {
     try {
       final query = searchController.text.trim();
       final uri = Uri.parse(
-          '${ApiUrls.productList}?page=$page&limit=$_pageSize'
-          '${query.isNotEmpty ? '&search=${Uri.encodeComponent(query)}' : ''}');
-      
+        '${ApiUrls.productList}?page=$page&limit=$_pageSize'
+        '${query.isNotEmpty ? '&search=${Uri.encodeComponent(query)}' : ''}',
+      );
+
       debugPrint('GLOBAL PRODUCT LIST [page=$page, query=$query] → $uri');
 
       final response = await http.get(uri);
@@ -82,7 +83,8 @@ class ProductListProvider extends ChangeNotifier {
             hasMore = false;
           }
           debugPrint(
-              'PRODUCT LIST ✅ Page $page → ${parsed.data.length} items (total: ${_allProducts.length})');
+            'PRODUCT LIST ✅ Page $page → ${parsed.data.length} items (total: ${_allProducts.length})',
+          );
         } else {
           hasMore = false;
           if (_allProducts.isEmpty) errorMessage = "No products found.";
@@ -103,9 +105,11 @@ class ProductListProvider extends ChangeNotifier {
       filteredProducts = List.from(_allProducts);
     } else {
       filteredProducts = _allProducts
-          .where((p) =>
-              p.name.toLowerCase().contains(query.toLowerCase()) ||
-              p.tags.toLowerCase().contains(query.toLowerCase()))
+          .where(
+            (p) =>
+                p.name.toLowerCase().contains(query.toLowerCase()) ||
+                p.tags.toLowerCase().contains(query.toLowerCase()),
+          )
           .toList();
     }
   }
@@ -126,13 +130,16 @@ class ProductListProvider extends ChangeNotifier {
     if (available) {
       isListening = true;
       notifyListeners();
-      _speech.listen(onResult: (result) {
-        final text = result.recognizedWords;
-        searchController.text = text;
-        searchController.selection =
-            TextSelection.fromPosition(TextPosition(offset: text.length));
-        onSearch(text);
-      });
+      _speech.listen(
+        onResult: (result) {
+          final text = result.recognizedWords;
+          searchController.text = text;
+          searchController.selection = TextSelection.fromPosition(
+            TextPosition(offset: text.length),
+          );
+          onSearch(text);
+        },
+      );
     }
   }
 

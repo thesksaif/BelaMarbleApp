@@ -65,9 +65,10 @@ class TileListProvider extends ChangeNotifier {
     try {
       final query = searchController.text.trim();
       final uri = Uri.parse(
-          '${ApiUrls.productList}?category_id=$categoryId&page=$page&limit=$_pageSize'
-          '${query.isNotEmpty ? '&search=${Uri.encodeComponent(query)}' : ''}');
-      
+        '${ApiUrls.productList}?category_id=$categoryId&page=$page&limit=$_pageSize'
+        '${query.isNotEmpty ? '&search=${Uri.encodeComponent(query)}' : ''}',
+      );
+
       debugPrint('CATEGORY LIST [page=$page, query=$query] → $uri');
 
       final response = await http.get(uri);
@@ -84,11 +85,12 @@ class TileListProvider extends ChangeNotifier {
             hasMore = false;
           }
           debugPrint(
-              'CATEGORY LIST ✅ Page $page → ${parsed.data.length} items (total: ${_allProducts.length})');
+            'CATEGORY LIST ✅ Page $page → ${parsed.data.length} items (total: ${_allProducts.length})',
+          );
         } else {
           hasMore = false;
           if (_allProducts.isEmpty && data['code'] == 204) {
-             errorMessage = "No products found in this category.";
+            errorMessage = "No products found in this category.";
           }
         }
       } else {
@@ -107,9 +109,11 @@ class TileListProvider extends ChangeNotifier {
       filteredProducts = List.from(_allProducts);
     } else {
       filteredProducts = _allProducts
-          .where((product) =>
-              product.name.toLowerCase().contains(query.toLowerCase()) ||
-              product.tags.toLowerCase().contains(query.toLowerCase()))
+          .where(
+            (product) =>
+                product.name.toLowerCase().contains(query.toLowerCase()) ||
+                product.tags.toLowerCase().contains(query.toLowerCase()),
+          )
           .toList();
     }
   }
